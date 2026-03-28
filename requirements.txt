@@ -2,7 +2,9 @@ fastapi
 uvicorn
 pymongo
 pymupdf
-requests
 python-multipart
 openai
+bcrypt
+pydantic
 python-dotenv
+requests
