@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Student Dashboard</h2>
+
+<!-- 📤 Upload Form -->
+<h3>Upload Internship</h3>
+
+<input id="company" placeholder="Company Name"><br><br>
+<input id="file" type="file"><br><br>
+
+<button onclick="upload()">Upload</button>
+
+<hr>
+
+<!-- 📄 View Data -->
+<button onclick="loadData()">My Internships</button>
+<button onclick="logout()">Logout</button>
+
+<div id="data"></div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("user"));
+
+// 🔒 Protect page
+if (!user || user.role !== "student") {
+  window.location = "index.html";
+}
+
+
+// 📤 UPLOAD FUNCTION (IMPORTANT 🔥)
+async function upload() {
+  const company = document.getElementById("company").value;
+  const file = document.getElementById("file").files[0];
+
+  if (!file) {
+    alert("Select a file");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("username", user.username);
+  formData.append("company_name", company);
+  formData.append("file", file);
+
+  const res = await fetch("http://127.0.0.1:8000/student/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  alert("Uploaded!");
+  console.log(data);
+
+  loadData(); // refresh list
+}
+
+
+// 📄 LOAD DATA
+async function loadData() {
+  const res = await fetch(
+    `http://127.0.0.1:8000/student/my/${user.username}`
+  );
+
+  const data = await res.json();
+
+  let html = "";
+
+  data.forEach(item => {
+    html += `
+      <div style="border:1px solid black; margin:10px; padding:10px;">
+        <p><b>${item.company_name}</b></p>
+        <p>Status: ${item.status}</p>
+        <p>AI: ${item.ai_verdict}</p>
+        <p>Reason: ${item.ai_reason}</p>
+        <p>Admin Note: ${item.rejection_reason}</p>
+      </div>
+    `;
+  });
+
+  document.getElementById("data").innerHTML = html;
+}
+
+
+// 🔐 LOGOUT
+function logout() {
+  localStorage.removeItem("user");
+  window.location = "index.html";
+}
+</script>
+
+</body>
+</html>

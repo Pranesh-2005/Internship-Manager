@@ -1,0 +1,70 @@
+<h2>Admin Dashboard</h2>
+
+<button onclick="loadAll()">All</button>
+<button onclick="loadApproved()">Approved</button>
+<button onclick="loadPending()">Pending</button>
+<button onclick="logout()">Logout</button>
+
+<div id="data"></div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("user"));
+
+// 🔒 Protect route
+if (!user || user.role !== "admin") {
+  window.location = "index.html";
+}
+
+async function loadAll() {
+  const res = await fetch("http://127.0.0.1:8000/admin/all");
+  const data = await res.json();
+  render(data);
+}
+
+async function loadApproved() {
+  const res = await fetch("http://127.0.0.1:8000/admin/approved");
+  const data = await res.json();
+  render(data);
+}
+
+async function loadPending() {
+  const res = await fetch("http://127.0.0.1:8000/admin/pending");
+  const data = await res.json();
+  render(data);
+}
+
+function render(data) {
+  let html = "";
+
+  data.forEach(item => {
+    html += `
+      <div style="border:1px solid black; margin:10px; padding:10px;">
+        <p>${item.username} - ${item.company_name}</p>
+        <p>Extracted Text: ${item.extracted_text}</p>
+        <p>AI Verdict: ${item.ai_verdict}</p>
+        <p>Status: ${item.status}</p>
+        <button onclick="approve('${item._id}')">Approve</button>
+        <button onclick="reject('${item._id}')">Reject</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("data").innerHTML = html;
+}
+
+async function approve(id) {
+  await fetch(`http://127.0.0.1:8000/admin/approve/${id}`, {method:"POST"});
+  loadAll();
+}
+
+async function reject(id) {
+  const reason = prompt("Reason:");
+  await fetch(`http://127.0.0.1:8000/admin/reject/${id}?reason=${reason}`, {method:"POST"});
+  loadAll();
+}
+
+function logout() {
+  localStorage.removeItem("user");
+  window.location = "index.html";
+}
+</script>
