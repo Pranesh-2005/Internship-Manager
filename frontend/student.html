@@ -44,7 +44,7 @@ async function upload() {
   formData.append("company_name", company);
   formData.append("file", file);
 
-  const res = await fetch("http://127.0.0.1:8000/student/upload", {
+  const res = await fetch("https://nternship-anager-pranesh-20059066-nugas0bw.apn.leapcell.dev/student/upload", {
     method: "POST",
     body: formData
   });
@@ -61,7 +61,7 @@ async function upload() {
 // 📄 LOAD DATA
 async function loadData() {
   const res = await fetch(
-    `http://127.0.0.1:8000/student/my/${user.username}`
+    `https://nternship-anager-pranesh-20059066-nugas0bw.apn.leapcell.dev/student/my/${user.username}`
   );
 
   const data = await res.json();

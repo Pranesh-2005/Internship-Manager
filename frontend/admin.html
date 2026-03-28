@@ -16,19 +16,19 @@ if (!user || user.role !== "admin") {
 }
 
 async function loadAll() {
-  const res = await fetch("http://127.0.0.1:8000/admin/all");
+  const res = await fetch("https://nternship-anager-pranesh-20059066-nugas0bw.apn.leapcell.dev/admin/all");
   const data = await res.json();
   render(data);
 }
 
 async function loadApproved() {
-  const res = await fetch("http://127.0.0.1:8000/admin/approved");
+  const res = await fetch("https://nternship-anager-pranesh-20059066-nugas0bw.apn.leapcell.dev/admin/approved");
   const data = await res.json();
   render(data);
 }
 
 async function loadPending() {
-  const res = await fetch("http://127.0.0.1:8000/admin/pending");
+  const res = await fetch("https://nternship-anager-pranesh-20059066-nugas0bw.apn.leapcell.dev/admin/pending");
   const data = await res.json();
   render(data);
 }
@@ -53,13 +53,13 @@ function render(data) {
 }
 
 async function approve(id) {
-  await fetch(`http://127.0.0.1:8000/admin/approve/${id}`, {method:"POST"});
+  await fetch(`https://nternship-anager-pranesh-20059066-nugas0bw.apn.leapcell.dev/admin/approve/${id}`, {method:"POST"});
   loadAll();
 }
 
 async function reject(id) {
   const reason = prompt("Reason:");
-  await fetch(`http://127.0.0.1:8000/admin/reject/${id}?reason=${reason}`, {method:"POST"});
+  await fetch(`https://nternship-anager-pranesh-20059066-nugas0bw.apn.leapcell.dev/admin/reject/${id}?reason=${reason}`, {method:"POST"});
   loadAll();
 }
 
