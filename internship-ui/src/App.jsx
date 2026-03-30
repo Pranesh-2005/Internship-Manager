@@ -523,6 +523,12 @@ const css = `
     background: linear-gradient(transparent, rgba(13,20,34,0.95));
   }
 
+    .extracted-block.admin-full {
+    max-height: none;
+    overflow: auto;
+  }
+  .extracted-block.admin-full::after { display: none; }
+
   /* ─── Empty state ─── */
   .empty-state {
     text-align: center;
@@ -822,6 +828,7 @@ function AdminDash({ user, onLogout, toast }) {
   const [tab, setTab] = useState("all");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [expandedId, setExpandedId] = useState(null);
 
   const load = async (filter="all") => {
     setLoading(true);
@@ -901,7 +908,15 @@ function AdminDash({ user, onLogout, toast }) {
                   {item.ai_verdict && <div className="meta-row"><span className="meta-label">AI</span><span className={`meta-value ${aiClass(item.ai_verdict)}`}>{item.ai_verdict}</span></div>}
                   {item.ai_reason && <div className="meta-row"><span className="meta-label">Reason</span><span className="meta-value">{item.ai_reason}</span></div>}
                 </div>
-                {item.extracted_text && <div className="extracted-block">{item.extracted_text}</div>}
+                {item.extracted_text && (
+                  <div 
+                    className={`extracted-block ${expandedId === item._id ? "admin-full" : ""}`}
+                    onClick={() => setExpandedId(expandedId === item._id ? null : item._id)}
+                    style={{ cursor: "pointer", maxHeight: expandedId === item._id ? "500px" : "80px" }}
+                  >
+                    {item.extracted_text}
+                  </div>
+                )}
                 {item.status === "pending" || !item.status ? (
                   <>
                     <hr className="card-divider"/>
