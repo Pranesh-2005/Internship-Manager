@@ -40,7 +40,7 @@ def check_legitimacy(text):
         """
 
     response = client.chat.completions.create(
-        model=MODEL,
+        model="google/gemma-2-2b-it",
         messages=[
             {
                 "role": "system",
